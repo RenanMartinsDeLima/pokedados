@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PokéDex</title>
+
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+    <link rel="shortcut icon" type="image/png" sizes="96x96" href="imagens/pokemon-icon.png">
+</head>
+<body>
+    <div class="container">
+        <div class="mensagem-inicial">
+            <h1>Jornada Pokemon</h1>
+        </div>
+
+        <div class="campo-encontrar-pokemon">
+            <button id="btn-encontrar" type="button">Encontrar Pokemon</button>
+        </div>
+
+        <div id="pokedex-app">
+            <div id="mensagem-loading" class="hidden">
+                <p>Procurando...</p>
+            </div>
+
+            <div id="pokemon-info" class="hidden">
+                <img id="pokemon-imagem" src="" alt="Imagem do Pokémon">
+                <h2 id="pokemon-nome"></h2>
+                <p id="pokemon-descricao"></p>
+            </div>
+
+            <div class="btns-navegacao hidden">
+                <button id="btn-capturar" type="button">Capturar</button>
+                <button id="btn-recusar" type="button">Recusar</button>
+            </div>
+
+            <div>
+                <h3>Pokémons Capturados:</h3>
+                <ul id="lista-capturados"></ul>
+
+                <button id="btn-limpar">Limpar Lista</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts.js" defer></script>
+</body>
+</html>
