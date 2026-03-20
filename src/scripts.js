@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const listaCapturados = document.getElementById("lista-capturados");
     const btnsNavegacao = document.querySelector(".btns-navegacao");
     const btnLimpar = document.getElementById("btn-limpar")
+    pokemonImagem.src = "imagens/pikachu.gif";
 
     let pokemonAtual = null;
     let capturados = [];
@@ -27,12 +28,13 @@ document.addEventListener("DOMContentLoaded", () => {
         btnsNavegacao.classList.add("hidden")
         mensagemLoading.classList.remove("hidden")
 
-        const id = Math.floor(Math.random() *151)+ 1
+        const id = Math.floor(Math.random() *649)+ 1
 
         try{
             const resposta = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
             const dados = await resposta.json();
             const nivel = Math.floor(Math.random() *50) +1;
+            await new Promise(resolve => setTimeout(resolve, 5000));
 
             const imagemAnimada = dados.sprites.versions["generation-v"]["black-white"].animated.front_default;
             const tipos = dados.types.map(t => t.type.name).join(", ");
