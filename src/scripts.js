@@ -9,73 +9,77 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnRecusar = document.getElementById("btn-recusar");
     const listaCapturados = document.getElementById("lista-capturados");
     const btnsNavegacao = document.querySelector(".btns-navegacao");
-    const btnLimpar = document.getElementById("btn-pokedex");
+    const btnLimpar = document.getElementById("btn-limpar");
     const pokemonTipo = document.getElementById("pokemon-tipo");
 
     let pokemonAtual = null;
     let capturados = [];
 
     const dadosSalvos = localStorage.getItem("capturados");
-    
-    if (dadosSalvos) {
-        capturados = JSON.parse(dadosSalvos);
+
+    try {
+        capturados = dadosSalvos ? JSON.parse(dadosSalvos) : [];
+    } catch {
+        capturados = [];
     }
 
     atualizarLista();
 
-    btnEncontrar.addEventListener("click", async () => {
-        pokemonInfo.classList.add("hidden");
-        btnsNavegacao.classList.add("hidden");
-        mensagemLoading.classList.remove("hidden");
+    // 🔎 BOTÃO PROCURAR
+    if (btnEncontrar) {
+        btnEncontrar.addEventListener("click", async () => {
+            pokemonInfo.classList.add("hidden");
+            btnsNavegacao.classList.add("hidden");
+            mensagemLoading.classList.remove("hidden");
 
-        const id = Math.floor(Math.random() * 649) + 1;
+            const id = Math.floor(Math.random() * 649) + 1;
 
-        try {
-            const resposta = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
-            const dados = await resposta.json();
+            try {
+                const resposta = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+                const dados = await resposta.json();
 
-            const nivel = Math.floor(Math.random() * 50) + 1;
-            await new Promise(resolve => setTimeout(resolve, 800));
+                const nivel = Math.floor(Math.random() * 50) + 1;
+                await new Promise(resolve => setTimeout(resolve, 800));
 
-            const imagemAnimada = dados.sprites?.versions?.["generation-v"]?.["black-white"]?.animated?.front_default;
-            const tiposArray = dados.types.map(t => t.type.name);
+                const imagemAnimada = dados.sprites?.versions?.["generation-v"]?.["black-white"]?.animated?.front_default;
+                const tiposArray = dados.types.map(t => t.type.name);
 
-            mostrarTipo(tiposArray);
+                mostrarTipo(tiposArray);
 
-            const peso = dados.weight / 10;
-            const altura = dados.height / 10;
+                const peso = dados.weight / 10;
+                const altura = dados.height / 10;
 
-            pokemonAtual = {
-                nome: dados.name,
-                imagem: imagemAnimada || dados.sprites.front_default
-            };
+                pokemonAtual = {
+                    nome: dados.name,
+                    imagem: imagemAnimada || dados.sprites.front_default
+                };
 
-            pokemonImagem.onload = () => {
-                pokemonInfo.classList.remove("hidden");
-                btnsNavegacao.classList.remove("hidden");
+                pokemonImagem.onload = () => {
+                    pokemonInfo.classList.remove("hidden");
+                    btnsNavegacao.classList.remove("hidden");
+                    mensagemLoading.classList.add("hidden");
+
+                    pokemonInfo.classList.remove("animar");
+                    void pokemonInfo.offsetWidth;
+                    pokemonInfo.classList.add("animar");
+                };
+
+                pokemonImagem.src = pokemonAtual.imagem;
+
+                pokemonNome.textContent =
+                    `${pokemonAtual.nome.charAt(0).toUpperCase() + pokemonAtual.nome.slice(1)} Lv${nivel}`;
+
+                pokemonDescricao.textContent =
+                    `Peso: ${peso}kg | Altura: ${altura}m`;
+
+            } catch (erro) {
                 mensagemLoading.classList.add("hidden");
-                
-                pokemonInfo.classList.remove("animar"); // reset
-                void pokemonInfo.offsetWidth; // força reinício da animação
-                pokemonInfo.classList.add("animar");
+                alert("Erro ao buscar pokemon");
+            }
+        });
+    }
 
-            };
-
-            pokemonImagem.src = pokemonAtual.imagem;
-
-
-            pokemonNome.textContent =
-                `${pokemonAtual.nome.charAt(0).toUpperCase() + pokemonAtual.nome.slice(1)} Lv${nivel}`;
-
-            pokemonDescricao.textContent =
-                `Peso: ${peso}kg | Altura: ${altura}m`;
-
-        } catch (erro) {
-            mensagemLoading.classList.add("hidden");
-            alert("Erro ao buscar pokemon");
-        }
-    });
-
+    // 🧬 TIPOS
     function mostrarTipo(tiposArray) {
         pokemonTipo.innerHTML = "";
 
@@ -87,43 +91,66 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
- btnCapturar.addEventListener("click", () =>{
-        if(!pokemonAtual) return;
+    // 🎯 CAPTURAR
+    if (btnCapturar) {
+        btnCapturar.addEventListener("click", () => {
+            if (!pokemonAtual) return;
 
-        capturados.push(pokemonAtual);
-        localStorage.setItem("capturados", JSON.stringify(capturados));
-        atualizarLista();
-        limparTela();
+            capturados.push(pokemonAtual);
+            localStorage.setItem("capturados", JSON.stringify(capturados));
+            atualizarLista();
+            limparTela();
+        });
+    }
 
-    });
+    //RECUSAR
+    if (btnRecusar) {
+        btnRecusar.addEventListener("click", () => {
+            limparTela();
+        });
+    }
 
-    btnRecusar.addEventListener("click", () => {
-        limparTela();
-    });
-
+    //LISTA
     function atualizarLista() {
+
+        if (!listaCapturados) return;
+
         listaCapturados.innerHTML = "";
 
+        if (!capturados || !Array.isArray(capturados)) return;
+
         capturados.forEach(pokemon => {
+            if (!pokemon || !pokemon.imagem || !pokemon.nome) return; // 🔥 proteção total
+
             const li = document.createElement("li");
 
-            li.textContent = pokemon.nome.charAt(0).toUpperCase() + pokemon.nome.slice(1);
+            const img = document.createElement("img");
+            img.src = pokemon.imagem;
+            img.style.width = "50px";
+
+            // const nome = document.createElement("p");
+            // nome.textContent = pokemon.nome;
+
+            li.appendChild(img);
+            // li.appendChild(nome);
 
             listaCapturados.appendChild(li);
         });
     }
-    
 
-    btnLimpar.addEventListener("click", () => {
-        capturados = [];
-        localStorage.removeItem("capturados");
-        atualizarLista();
-    });
+    // 🧹 LIMPAR / POKEDEX
+    if (btnLimpar) {
+        btnLimpar.addEventListener("click", () => {
+            capturados = [];
+            localStorage.removeItem("capturados");
+            atualizarLista();
+        });
+    }
 
-     function limparTela() {
+    // 🧼 LIMPAR TELA
+    function limparTela() {
         pokemonInfo.classList.add("hidden");
         btnsNavegacao.classList.add("hidden");
         pokemonAtual = null;
     }
-
 });
