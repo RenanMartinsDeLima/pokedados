@@ -15,27 +15,34 @@
 
         <!-- ESQUERDA -->
         <div class="lado-esquerdo">
-            <h3>NOME</h3>
+            <h3 id="pokemon-nome"></h3>
 
             <div class="pokemon-view">
-                <img src="">
+                <img id="pokemon-imagem" src="">
             </div>
 
-            <p class="level">Lvl. 50</p>
+            <p class="level" id="pokemon-level"></p>
 
-            <div class="tipo">
-                <span class="normal">NORMAL</span>
-                <span class="flying">FLYING</span>
-            </div>
+            <div class="tipo" id="pokemon-tipo"></div>
 
-            <p class="habilidade"></p>
+            <p id="pokemon-peso"></p>
+            <p id="pokemon-altura"></p>
+            
         </div>
 
         <!-- DIREITA -->
         <div class="lado-direito">
             <div class="topo">
                 <input></input>
-                <button>FILTRAR</button>
+                <div class="menu">
+                    <button id="btn-toggle">☰</button>
+
+                    <div class="sub-botoes" id="sub-botoes">
+                        <button>NOME</button>
+                        <button>TIPO</button>
+                        <button>LEVEL</button>
+                    </div>
+                </div>
             </div>
 
             <div class="grid" id="grid-pokemon">

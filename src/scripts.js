@@ -11,6 +11,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnsNavegacao = document.querySelector(".btns-navegacao");
     const btnLimpar = document.getElementById("btn-limpar");
     const pokemonTipo = document.getElementById("pokemon-tipo");
+    const pokemonLevel = document.getElementById("pokemon-level");
+    const pokemonPeso = document.getElementById("pokemon-peso");
+    const pokemonAltura = document.getElementById("pokemon-altura");   
+    const btnToggle = document.getElementById("btn-toggle");
+    const subBotoes = document.getElementById("sub-botoes");
 
     let pokemonAtual = null;
     let capturados = [];
@@ -51,7 +56,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 pokemonAtual = {
                     nome: dados.name,
-                    imagem: imagemAnimada || dados.sprites.front_default
+                    imagemAnimada: imagemAnimada || dados.sprites.front_default,
+                    imagem: dados.sprites.front_default,
+                    tipos: tiposArray,
+                    nivel: nivel,
+                    peso: dados.weight / 10,
+                    altura: dados.height / 10
                 };
 
                 pokemonImagem.onload = () => {
@@ -64,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     pokemonInfo.classList.add("animar");
                 };
 
-                pokemonImagem.src = pokemonAtual.imagem;
+                pokemonImagem.src = pokemonAtual.imagemAnimada;
 
                 pokemonNome.textContent =
                     `${pokemonAtual.nome.charAt(0).toUpperCase() + pokemonAtual.nome.slice(1)} Lv${nivel}`;
@@ -119,8 +129,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!capturados || !Array.isArray(capturados)) return;
 
-        capturados.forEach(pokemon => {
-            if (!pokemon || !pokemon.imagem || !pokemon.nome) return; // 🔥 proteção total
+        capturados.forEach((pokemon, index) => {
+            if (!pokemon || !pokemon.imagem || !pokemon.nome) return;
 
             const li = document.createElement("li");
 
@@ -128,14 +138,43 @@ document.addEventListener("DOMContentLoaded", () => {
             img.src = pokemon.imagem;
             img.style.width = "50px";
 
-            // const nome = document.createElement("p");
-            // nome.textContent = pokemon.nome;
-
             li.appendChild(img);
-            // li.appendChild(nome);
+
+            li.addEventListener("click", () =>{
+                mostrarPokemon(pokemon)
+            })
 
             listaCapturados.appendChild(li);
         });
+    }
+
+    //MOSTRAR POKEMON
+    function mostrarPokemon(pokemon) {
+        if (pokemonInfo) {
+            pokemonInfo.classList.remove("hidden");
+        }
+
+        if (btnsNavegacao) {
+            btnsNavegacao.classList.remove("hidden");
+        }
+
+        pokemonNome.textContent = pokemon.nome.charAt(0).toUpperCase()+pokemon.nome.slice(1);
+        pokemonImagem.src = pokemon.imagem;
+        pokemonLevel.textContent =  `Lv. ${pokemon.nivel || 1}`;
+        
+        const tipoDiv = document.getElementById("pokemon-tipo");
+        tipoDiv.innerHTML = "";
+
+        if (pokemon.tipos) {
+            pokemon.tipos.forEach(tipo => {
+                const span = document.createElement("span");
+                span.textContent = tipo.toUpperCase();
+                span.classList.add(tipo);
+                tipoDiv.appendChild(span);
+            });
+        }
+        pokemonPeso.textContent = `Peso: ${pokemon.peso}kg`;
+        pokemonAltura.textContent = `Altura: ${pokemon.altura}m`;
     }
 
     // 🧹 LIMPAR / POKEDEX
@@ -153,4 +192,14 @@ document.addEventListener("DOMContentLoaded", () => {
         btnsNavegacao.classList.add("hidden");
         pokemonAtual = null;
     }
+
+    // BOTOES FILTRAR
+    btnToggle.addEventListener("click", () => {
+        if (subBotoes.style.display === "none" || subBotoes.style.display === "") {
+            subBotoes.style.display = "flex";
+        } else {
+            subBotoes.style.display = "none";
+        }
+    });
+
 });
