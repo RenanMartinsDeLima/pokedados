@@ -16,12 +16,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const pokemonAltura = document.getElementById("pokemon-altura");   
     const btnToggle = document.getElementById("btn-toggle");
     const subBotoes = document.getElementById("sub-botoes");
+    const input = document.getElementById("input-busca");
+    const btnNome = document.getElementById("btn-nome");
+    const btnTipo = document.getElementById("btn-tipo");
+    const btnLevel = document.getElementById("btn-level");
 
     let pokemonAtual = null;
     let capturados = [];
 
     const dadosSalvos = localStorage.getItem("capturados");
-
     try {
         capturados = dadosSalvos ? JSON.parse(dadosSalvos) : [];
     } catch {
@@ -136,12 +139,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const img = document.createElement("img");
             img.src = pokemon.imagem;
-            img.style.width = "50px";
+            img.style.width = "75px";
 
             li.appendChild(img);
-
+            pokemonImagem.classList.add("hidden");
             li.addEventListener("click", () =>{
-                mostrarPokemon(pokemon)
+                pokemonImagem.classList.remove("hidden");
+                mostrarPokemon(pokemon);
             })
 
             listaCapturados.appendChild(li);
@@ -177,15 +181,94 @@ document.addEventListener("DOMContentLoaded", () => {
         pokemonAltura.textContent = `Altura: ${pokemon.altura}m`;
     }
 
-    // 🧹 LIMPAR / POKEDEX
-    if (btnLimpar) {
-        btnLimpar.addEventListener("click", () => {
-            capturados = [];
-            localStorage.removeItem("capturados");
-            atualizarLista();
+    // BUSCAR POKEMON
+    input.addEventListener("input", () => {
+        const valor = input.value.toLowerCase();
+
+        const filtrados = capturados.filter(pokemon =>
+            pokemon.nome.toLowerCase().includes(valor)
+        );
+
+        mostrarLista(filtrados);
+    });
+
+    btnNome.addEventListener("click", () => {
+        const valor = input.value.toLowerCase();
+    
+        const filtrados = capturados.filter(pokemon =>
+            pokemon.nome.toLowerCase().includes(valor)
+        );
+
+        mostrarLista(filtrados);
+    });
+
+    btnTipo.addEventListener("click", () => {
+        const valor = input.value.toLowerCase();
+
+        const filtrados = capturados.filter(pokemon =>
+            pokemon.tipos.some(tipo => tipo.toLowerCase().includes(valor))
+        );
+
+        mostrarLista(filtrados);
+    });
+
+
+    btnLevel.addEventListener("click", () => {
+        const valor = parseInt(input.value) || Infinity;
+        if (isNaN(valor)) {
+            alert("Digite um nómero válido");
+            return;
+        }
+        const filtrados = capturados.filter(pokemon =>
+            pokemon.nivel <= valor
+        );
+        filtrados.sort((a, b) => a.nivel - b.nivel);
+        mostrarLista(filtrados);
+    });
+
+    function mostrarLista(lista) {
+        listaCapturados.innerHTML = "";
+
+        lista.forEach((pokemon) => {
+            if (!pokemon || !pokemon.imagem || !pokemon.nome) return;
+
+            const li = document.createElement("li");
+            li.dataset.nome = pokemon.nome;
+            const img = document.createElement("img");
+            img.src = pokemon.imagem;
+            img.style.width = "75px";
+
+            li.appendChild(img);
+            pokemonImagem.classList.add("hidden");
+            li.addEventListener("click", () =>{
+                pokemonImagem.classList.remove("hidden");
+                mostrarPokemon(pokemon);
+            })
+
+            listaCapturados.appendChild(li);
         });
     }
 
+    // 🧹 LIMPAR / POKEDEX
+    if (btnLimpar) {
+        btnLimpar.addEventListener("click", () => {
+            const itensNaTela = Array.from(listaCapturados.children);
+
+            // nomes visíveis em minúsculo
+            const nomesVisiveis = itensNaTela.map(li => li.dataset.nome.toLowerCase());
+
+            // filtra capturados, removendo os que estão visíveis
+            capturados = capturados.filter(pokemon => 
+                !nomesVisiveis.includes(pokemon.nome.toLowerCase())
+            );
+
+            // salva no localStorage
+            localStorage.setItem("capturados", JSON.stringify(capturados));
+
+            // atualiza a lista
+            mostrarLista(capturados);
+        });
+    }
     // 🧼 LIMPAR TELA
     function limparTela() {
         pokemonInfo.classList.add("hidden");
