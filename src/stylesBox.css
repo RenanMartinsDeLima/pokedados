@@ -24,10 +24,43 @@ body {
     border-radius: 15px;
 
     box-shadow: 0 10px 25px rgba(255, 230, 0, 0.247);
-    backdrop-filter: blur(5px);
+    backdrop-filter : blur(5px);
 }
 
 /* ESQUERDA */
+@keyframes abrirPokedex {
+    0% {
+        transform: scale(0.7) rotateX(90deg);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.05) rotateX(-10deg);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1) rotateX(0);
+    }
+}
+
+@keyframes fecharPokedex {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0.7) rotateX(90deg);
+        opacity: 0;
+    }
+}
+
+.animar-abrir {
+    animation: abrirPokedex 0.4s ease-out;
+}
+
+.animar-fechar {
+    animation: fecharPokedex 0.3s ease-in;
+}
+
 .lado-esquerdo {
     width: 280px;
     height: 520px;
@@ -132,7 +165,7 @@ body {
 #pokemon-peso,
 #pokemon-altura {
     font-size: 25px;
-    margin: 25px 0;
+    margin: 20px 0;
     text-align: center;
     color: #555;
 }
@@ -192,6 +225,7 @@ body {
 
     height: 340px;
     overflow-y: auto;
+    scrollbar-width: none;
 }
 
 /* LISTA */
@@ -228,6 +262,17 @@ body {
     justify-content: space-between;
 }
 
+#apagar-pokemon {
+    font-size: 15px;
+    margin: -25px 0 -10px 260px;
+    border: none;
+}
+
+#apagar-pokemon:hover {
+    transform: scale(1.1);
+    background-color: rgba(255, 255, 255, 0);
+}
+
 button {
     font-family: 'Pixelify Sans', sans-serif;
     transition: 0.2s;
@@ -245,3 +290,5 @@ button:hover {
     background-color: #2A75BB;
     color: white;
 }
+
+

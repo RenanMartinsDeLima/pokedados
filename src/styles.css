@@ -1,6 +1,4 @@
-/* ============================= */
 /* FONTES E FONT-FACE            */
-/* ============================= */
 @font-face {
     font-family: 'Pokemon';
     src: url(fonts/Pokemon\ Solid.ttf);
@@ -19,9 +17,7 @@ body {
     color: #333;
 }
 
-/* ============================= */
 /* CONTAINERS PRINCIPAIS         */
-/* ============================= */
 .container {
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(5px);
@@ -30,16 +26,12 @@ body {
     text-align: center;
 }
 
-/* ============================= */
 /* OCULTAR ELEMENTOS             */
-/* ============================= */
 .hidden {
     display: none;
 }
 
-/* ============================= */
 /* MENSAGENS INICIAIS            */
-/* ============================= */
 .mensagem-inicial h1 {
     font-family: "Pokemon", sans-serif;
     font-size: 40px;
@@ -69,9 +61,7 @@ body {
        -2px 2px 0 #000000;
 }
 
-/* ============================= */
 /* MENSAGEM DE LOADING           */
-/* ============================= */
 #mensagem-loading img {
     width: 120px;
     margin: 20px 0px -20px 0px;
@@ -82,9 +72,7 @@ body {
     margin: 15px 0px 20px 10px;
 }
 
-/* ============================= */
 /* IMAGENS DE POKÉMON            */
-/* ============================= */
 #pokemon-info img {
     width: 100px;
     max-width: 101px;
@@ -101,9 +89,7 @@ body {
     100% { transform: translateY(0); }
 }
 
-/* ============================= */
 /* ANIMAÇÃO DE APARECIMENTO      */
-/* ============================= */
 @keyframes aparecerPokemon {
     0% { transform: scale(0.5); opacity: 0; }
     60% { transform: scale(1.1); opacity: 1; }
@@ -114,9 +100,7 @@ body {
     animation: aparecerPokemon 0.5s ease-out;
 }
 
-/* ============================= */
 /* BOTÕES                         */
-/* ============================= */
 button {
     font-family: 'Pixelify Sans', sans-serif;
     transition: 0.2s;
@@ -135,9 +119,7 @@ button:hover {
     color: white;
 }
 
-/* ============================= */
 /* LISTAS E TEXTOS               */
-/* ============================= */
 ul {
     list-style: none;
     padding: 0;
@@ -151,9 +133,7 @@ ul {
     margin: -5px 0 20px 0;
 }
 
-/* ============================= */
 /* TIPOS DE POKÉMON              */
-/* ============================= */
 #pokemon-tipo {
     display: flex;
     justify-content: center;
