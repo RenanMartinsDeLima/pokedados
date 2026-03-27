@@ -273,6 +273,14 @@ body {
     background-color: rgba(255, 255, 255, 0);
 }
 
+#uppar-pokemon {
+    border: none;
+}
+#uppar-pokemon:hover {
+    transform: scale(1.1);
+    background-color: rgba(255, 255, 255, 0);
+}
+
 button {
     font-family: 'Pixelify Sans', sans-serif;
     transition: 0.2s;

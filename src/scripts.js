@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnId = document.getElementById("btn-id");
     const painelPokemon = document.querySelector(".lado-esquerdo");
     const btnApagarPokemon = document.getElementById("apagar-pokemon")
+    const btnUpparPokemon = document.getElementById("uppar-pokemon")
     
     let pokemonAtual = null;    
     let capturados = [];
@@ -347,6 +348,13 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             subBotoes.style.display = "none";
         }
+    });
+
+    btnUpparPokemon.addEventListener("click", async () => {
+        mostrarLista(capturados);
+        fecharPainel();
+        await fetch(`http://localhost:3000/pokemon/${pokeonSelecionado.id}/${pokeonSelecionado.nivel}`, {method: 'PUT', headers: {'Content-Type': 'application/json'}});
+        pokeonSelecionado.nivel+=1
     });
 
 });

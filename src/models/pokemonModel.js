@@ -55,13 +55,13 @@ async function readPokemon(atributo, valor) {
 }
 
 // UPDATE
-async function updatePokemon() {
+async function updatePokemon(id, nivel) {
   const client = await connectClient();
   try {
     const database = client.db('pokedex');
     const pokemons = database.collection('pokemons');
     // const pokemon = await pokemons.updateOne({name:''}, {$set:{name:''}});
-    const pokemon = await pokemons.updateMany({}, {$set:{nivel: 1}});
+    const pokemon = await pokemons.updateOne({id: parseInt(id), nivel: parseInt(nivel)}, {$set:{nivel: parseInt(nivel)+1}});
     console.log(pokemon);
   } finally {
     await client.close();

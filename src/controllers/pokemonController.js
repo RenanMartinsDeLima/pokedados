@@ -1,5 +1,5 @@
 const { createPokemon, readPokemon, updatePokemon, deletePokemon } = require('../models/pokemonModel')
-const express = require('express');
+// const express = require('express');
 
 // POST 
 const create = async (req, res) => {
@@ -23,26 +23,26 @@ const get = async (req, res) => {
 };
 
 
-const getByName = async (req, res) => {
-  try {
-    console.log(req.params.nome)
-    const list = await readPokemon(req.params.nome);
-    res.json(list);
-  } catch (err) {
-    res.status(500).json({ error: 'Erro ao buscar pokémons\n' + err.message });
-  }
-};
+// const getByName = async (req, res) => {
+//   try {
+//     console.log(req.params.nome)
+//     const list = await readPokemon(req.params.nome);
+//     res.json(list);
+//   } catch (err) {
+//     res.status(500).json({ error: 'Erro ao buscar pokémons\n' + err.message });
+//   }
+// };
 
 
-const getByID = async (req, res) => {
-  try {
-    console.log(req.params.id)
-    const list = await readPokemon(req.params.id);
-    res.json(list);
-  } catch (err) {
-    res.status(500).json({ error: 'Erro ao buscar pokémons\n' + err.message });
-  }
-};
+// const getByID = async (req, res) => {
+//   try {
+//     console.log(req.params.id)
+//     const list = await readPokemon(req.params.id);
+//     res.json(list);
+//   } catch (err) {
+//     res.status(500).json({ error: 'Erro ao buscar pokémons\n' + err.message });
+//   }
+// };
 
 const getBy = async (req, res) => {
   try {
@@ -67,8 +67,8 @@ const getBy = async (req, res) => {
 // PUT 
 const update = async (req, res) => {
   try {
-    console.log(req.body);
-    const pokemon = await updatePokemon();
+    console.log(req.params);
+    const pokemon = await updatePokemon(req.params.id, req.params.nivel);
     res.json(pokemon);
   } catch (err) {
     res.status(500).json({ error: 'Erro ao buscar pokémons\n' + err.message });
@@ -101,8 +101,8 @@ const removeAll = async (req, res) => {
 module.exports = {
     get,
     getBy,
-    getByName,
-    getByID,
+    // getByName,
+    // getByID,
     create,
     update,
     remove,
