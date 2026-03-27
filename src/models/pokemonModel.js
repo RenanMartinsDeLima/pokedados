@@ -13,36 +13,6 @@ async function createPokemon(document) {
     const database = client.db('pokedex');
     const pokemons = database.collection('pokemons');
     const pokemon = await pokemons.insertOne(document);
-//     const pokemon = await pokemons.insertMany([
-//   {
-//     nome: 'mudkip',
-//     tipo: 'agua'
-//   },
-//   {
-//     nome: 'squirtle',
-//     tipo: 'agua'
-//   },
-//   {
-//     nome: 'pikachu',
-//     tipo: 'eletrico'
-//   },
-//   {
-//     nome: 'torchic',
-//     tipo: 'fogo'
-//   },
-//   {
-//     nome: 'charmander',
-//     tipo: 'fogo'
-//   },
-//   {
-//     nome: 'treecko',
-//     tipo: 'grama'
-//   },
-//   {
-//     nome: 'bulbasaur',
-//     tipo: 'grama'
-//   }
-// ]);
     console.log(pokemon);
   } finally {
     await client.close();
@@ -50,19 +20,37 @@ async function createPokemon(document) {
 }
 
 // READ
-async function readPokemon() {
+async function readPokemon(atributo, valor) {
   const client = await connectClient();
   try {
     const database = client.db('pokedex');
     const pokemons = database.collection('pokemons');
+    let query = {}
+    switch (atributo) {
+      case 'id':
+        query = { id: parseInt(valor) }
+        break;
+      case 'nivel':
+        query = { nivel: parseInt(valor) }
+        break;
+      case 'nome':
+        query = { nome: valor }
+        break;
+      case 'tipo':
+        query = { tipos: { $in: [valor] } }
+        break;
+      default:
+        break;
+    }
+    const pokemon = await pokemons.find(query).sort({tipo:1}).toArray();
     // const pokemon = await pokemons.find().toArray();
     // const pokemon = await pokemons.find({}, {name: true, _id: false}).toArray();
-    return await pokemons.find({}).sort({tipo:1}).toArray();
+    // return await pokemons.find({}).sort({tipo:1}).toArray();
     // const pokemon = await pokemons.find({ weight: { $gt: 22 } }).toArray(); // weight > 22
     // const pokemon = await pokemons.find({ weight: { $lte: 25 } }).toArray();  // weight <= 25
-    console.log(pokemon);
+    console.log(pokemon)
   } finally {
-    await client.close();
+    // await client.close();
   }
 }
 
@@ -73,7 +61,7 @@ async function updatePokemon() {
     const database = client.db('pokedex');
     const pokemons = database.collection('pokemons');
     // const pokemon = await pokemons.updateOne({name:''}, {$set:{name:''}});
-    const pokemon = await pokemons.updateMany({nome: 'pikachu'}, {$set:{tipo: 'eletrico'}});
+    const pokemon = await pokemons.updateMany({}, {$set:{nivel: 1}});
     console.log(pokemon);
   } finally {
     await client.close();
@@ -81,15 +69,20 @@ async function updatePokemon() {
 }
 
 // DELETE
-async function deletePokemon() {
+async function deletePokemon(id) {
   const client = await connectClient();
   try {
     const database = client.db('pokedex');
     const pokemons = database.collection('pokemons');
+    if (id) {
+      const pokemon = await pokemons.deleteOne({id: parseInt(id)});
+      console.log(pokemon);
+    } else {
+      const pokemon = await pokemons.deleteMany({});
+      console.log(pokemon);
+    }
     // const pokemon = await pokemons.deleteOne({name:''});
     // const pokemon = await pokemons.deleteMany({weight: {$lt: 21}});
-    const pokemon = await pokemons.deleteMany({});
-    console.log(pokemon);
   } finally {
     await client.close();
   }

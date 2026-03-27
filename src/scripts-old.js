@@ -11,12 +11,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnsNavegacao = document.querySelector(".btns-navegacao");
     const btnLimpar = document.getElementById("btn-limpar");
     const pokemonTipo = document.getElementById("pokemon-tipo");
+    const pokemonLevel = document.getElementById("pokemon-level");
+    const pokemonPeso = document.getElementById("pokemon-peso");
+    const pokemonAltura = document.getElementById("pokemon-altura");   
+    const btnToggle = document.getElementById("btn-toggle");
+    const subBotoes = document.getElementById("sub-botoes");
+    const input = document.getElementById("input-busca");
+    const btnNome = document.getElementById("btn-nome");
+    const btnTipo = document.getElementById("btn-tipo");
+    const btnLevel = document.getElementById("btn-level");
+    const btnId = document.getElementById("btn-id");
 
     let pokemonAtual = null;
     let capturados = [];
 
     const dadosSalvos = localStorage.getItem("capturados");
-
     try {
         capturados = dadosSalvos ? JSON.parse(dadosSalvos) : [];
     } catch {
@@ -52,11 +61,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 pokemonAtual = {
                     id: id,
                     nome: dados.name,
-                    nivel: nivel,
+                    imagemAnimada: imagemAnimada || dados.sprites.front_default,
+                    imagem: dados.sprites.front_default,
                     tipos: tiposArray,
-                    peso: peso,
-                    altura: altura,
-                    imagem: imagemAnimada || dados.sprites.front_default
+                    nivel: nivel,
+                    peso: dados.weight / 10,
+                    altura: dados.height / 10
                 };
 
                 pokemonImagem.onload = () => {
@@ -69,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     pokemonInfo.classList.add("animar");
                 };
 
-                pokemonImagem.src = pokemonAtual.imagem;
+                pokemonImagem.src = pokemonAtual.imagemAnimada;
 
                 pokemonNome.textContent =
                     `${pokemonAtual.nome.charAt(0).toUpperCase() + pokemonAtual.nome.slice(1)} Lv${nivel}`;
@@ -125,20 +135,138 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!capturados || !Array.isArray(capturados)) return;
 
-        capturados.forEach(pokemon => {
-            if (!pokemon || !pokemon.imagem || !pokemon.nome) return; // 🔥 proteção total
+        capturados.forEach((pokemon, index) => {
+            if (!pokemon || !pokemon.imagem || !pokemon.nome) return;
 
             const li = document.createElement("li");
 
             const img = document.createElement("img");
             img.src = pokemon.imagem;
-            img.style.width = "50px";
-
-            // const nome = document.createElement("p");
-            // nome.textContent = pokemon.nome;
+            img.style.width = "75px";
 
             li.appendChild(img);
-            // li.appendChild(nome);
+            pokemonImagem.classList.add("hidden");
+            li.addEventListener("click", () =>{
+                pokemonImagem.classList.remove("hidden");
+                mostrarPokemon(pokemon);
+            })
+
+            listaCapturados.appendChild(li);
+        });
+    }
+
+    //MOSTRAR POKEMON
+    function mostrarPokemon(pokemon) {
+        if (pokemonInfo) {
+            pokemonInfo.classList.remove("hidden");
+        }
+
+        if (btnsNavegacao) {
+            btnsNavegacao.classList.remove("hidden");
+        }
+
+        pokemonNome.textContent = pokemon.nome.charAt(0).toUpperCase()+pokemon.nome.slice(1);
+        pokemonImagem.src = pokemon.imagem;
+        pokemonLevel.textContent =  `Lv. ${pokemon.nivel || 1}`;
+        
+        const tipoDiv = document.getElementById("pokemon-tipo");
+        tipoDiv.innerHTML = "";
+
+        if (pokemon.tipos) {
+            pokemon.tipos.forEach(tipo => {
+                const span = document.createElement("span");
+                span.textContent = tipo.toUpperCase();
+                span.classList.add(tipo);
+                tipoDiv.appendChild(span);
+            });
+        }
+        pokemonPeso.textContent = `Peso: ${pokemon.peso}kg`;
+        pokemonAltura.textContent = `Altura: ${pokemon.altura}m`;
+    }
+
+    // BUSCAR POKEMON
+    input.addEventListener("input",  async() => {
+        // await fetch('http://localhost:3000/pokemon/54');
+        // await fetch(`http://localhost:3000/pokemon`, {method: 'PUT', headers: {'Content-Type': 'application/json'}})
+        const valor = input.value.toLowerCase();
+
+        const filtrados = capturados.filter(pokemon =>
+            pokemon.nome.toLowerCase().includes(valor)
+        );
+
+        mostrarLista(filtrados);
+    });
+
+    btnNome.addEventListener("click", async () => {
+        const valor = input.value.toLowerCase();
+    
+        const filtrados = capturados.filter(pokemon =>
+            pokemon.nome.toLowerCase().includes(valor)
+        );
+
+        mostrarLista(filtrados);
+        await fetch(`http://localhost:3000/pokemon/nome/${valor}`, {method: 'GET', headers: {'Content-Type': 'application/json'}})
+    });
+
+    btnTipo.addEventListener("click", async () => {
+        const valor = input.value.toLowerCase();
+
+        const filtrados = capturados.filter(pokemon =>
+            pokemon.tipos.some(tipo => tipo.toLowerCase().includes(valor))
+        );
+
+        mostrarLista(filtrados);
+        await fetch(`http://localhost:3000/pokemon/tipo/${valor}`, {method: 'GET', headers: {'Content-Type': 'application/json'}})
+    });
+
+
+    btnLevel.addEventListener("click", async () => {
+        const valor = parseInt(input.value) || Infinity;
+        if (isNaN(valor)) {
+            alert("Digite um nómero válido");
+            return;
+        }
+        const filtrados = capturados.filter(pokemon =>
+            pokemon.nivel === valor
+        );
+        filtrados.sort((a, b) => a.nivel - b.nivel);
+        mostrarLista(filtrados);
+        await fetch(`http://localhost:3000/pokemon/nivel/${valor}`, {method: 'GET', headers: {'Content-Type': 'application/json'}});
+    });
+
+
+    btnId.addEventListener("click", async () => {
+        const valor = parseInt(input.value) || Infinity;
+        if (isNaN(valor)) {
+            alert("Digite um nómero válido");
+            return;
+        }
+        const filtrados = capturados.filter(pokemon =>
+            pokemon.id === valor
+        );
+        filtrados.sort((a, b) => a.nivel - b.nivel);
+        mostrarLista(filtrados);
+        await fetch(`http://localhost:3000/pokemon/id/${valor}`, {method: 'GET', headers: {'Content-Type': 'application/json'}});
+    });
+
+    function mostrarLista(lista) {
+        listaCapturados.innerHTML = "";
+
+        lista.forEach((pokemon) => {
+            if (!pokemon || !pokemon.imagem || !pokemon.nome) return;
+
+            const li = document.createElement("li");
+            li.dataset.nome = pokemon.nome;
+            const img = document.createElement("img");
+            img.src = pokemon.imagem;
+            img.style.width = "75px";
+
+            li.appendChild(img);
+            pokemonImagem.classList.add("hidden");
+            li.addEventListener("click", () =>{
+                pokemonImagem.classList.remove("hidden");
+                mostrarPokemon(pokemon);
+            })
 
             listaCapturados.appendChild(li);
         });
@@ -147,17 +275,38 @@ document.addEventListener("DOMContentLoaded", () => {
     // 🧹 LIMPAR / POKEDEX
     if (btnLimpar) {
         btnLimpar.addEventListener("click", async () => {
-            capturados = [];
-            localStorage.removeItem("capturados");
+            const itensNaTela = Array.from(listaCapturados.children);
+
+            // nomes visíveis em minúsculo
+            const nomesVisiveis = itensNaTela.map(li => li.dataset.nome.toLowerCase());
+
+            // filtra capturados, removendo os que estão visíveis
+            capturados = capturados.filter(pokemon => 
+                !nomesVisiveis.includes(pokemon.nome.toLowerCase())
+            );
+
+            // salva no localStorage
+            localStorage.setItem("capturados", JSON.stringify(capturados));
+
+            // atualiza a lista
+            mostrarLista(capturados);
             await fetch('http://localhost:3000/pokemon', {method: 'DELETE', headers: {'Content-Type': 'application/json'}})
-            atualizarLista();
         });
     }
-
     // 🧼 LIMPAR TELA
     function limparTela() {
         pokemonInfo.classList.add("hidden");
         btnsNavegacao.classList.add("hidden");
         pokemonAtual = null;
     }
+
+    // BOTOES FILTRAR
+    btnToggle.addEventListener("click", () => {
+        if (subBotoes.style.display === "none" || subBotoes.style.display === "") {
+            subBotoes.style.display = "flex";
+        } else {
+            subBotoes.style.display = "none";
+        }
+    });
+
 });

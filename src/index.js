@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 // const { MongoClient } = require('mongodb');
 // const { createPokemon, readPokemon } = require('./mongo')
-const routePokemon = require('./routes/routePokemon')
+const routePokemon = require('./routes/pokemonRoutes')
 
 const app = express();
 const PORT = 3000;
