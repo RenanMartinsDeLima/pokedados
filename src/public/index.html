@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PokéDex</title>
+
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" type="image/png" sizes="96x96" href="../imagens/pokemon-icon.png">
+</head>
+<body>
+    <div class="container">
+        <div class="mensagem-inicial">
+            <h1>SUA JORNADA POKEMON COMEÇOU</h1>
+            <h3>Encotre os Pokemon e capture eles</h3>
+            <h2>Vamos lá!</h2>
+        </div>
+
+        <div class="campo-encontrar-pokemon">
+            <button id="btn-encontrar" type="button">Procurar Pokemon</button>
+        </div>
+
+        <div id="pokedex-app">
+            <div id="mensagem-loading" class="hidden">
+                <img id="loading-img" src="../imagens/run-pikachu.gif" alt="Loading">
+                <p>Procurando Pokémon ...</p>
+            </div>
+
+            <div id="pokemon-info" class="hidden">
+                <img id="pokemon-imagem" src="" alt="Imagem do Pokémon">
+                <h2 id="pokemon-nome"></h2>
+                <div id="pokemon-tipo" class="tipo"></div>
+                <p id="pokemon-descricao"></p>
+            </div>
+
+            <div class="btns-navegacao hidden">
+                <button id="btn-capturar" type="button">Capturar</button>
+                <button id="btn-recusar" type="button">Recusar</button>
+            </div>
+
+            <div class= "listaCapturados">
+                <a href="indexBox.html"> 
+                    <button id="btn-pokedex">Minha PokéDex</button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts.js" defer></script>
+</body>
+</html>

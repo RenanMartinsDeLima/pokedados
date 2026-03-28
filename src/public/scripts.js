@@ -9,7 +9,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnRecusar = document.getElementById("btn-recusar");
     const listaCapturados = document.getElementById("lista-capturados");
     const btnsNavegacao = document.querySelector(".btns-navegacao");
-    const btnLimpar = document.getElementById("btn-limpar");
+    const btnApagarTudo = document.getElementById("btn-limpar-tudo");
+    const btnApagarFiltrados = document.getElementById("btn-limpar-filtrados");
     const pokemonTipo = document.getElementById("pokemon-tipo");
     const pokemonLevel = document.getElementById("pokemon-level");
     const pokemonPeso = document.getElementById("pokemon-peso");
@@ -21,9 +22,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnTipo = document.getElementById("btn-tipo");
     const btnLevel = document.getElementById("btn-level");
     const btnId = document.getElementById("btn-id");
-
-    let pokemonAtual = null;
+    const painelPokemon = document.querySelector(".lado-esquerdo");
+    const btnApagarPokemon = document.getElementById("apagar-pokemon")
+    const btnUpparPokemon = document.getElementById("uppar-pokemon")
+    
+    let pokemonAtual = null;    
     let capturados = [];
+    let pokeonSelecionado = null;
 
     const dadosSalvos = localStorage.getItem("capturados");
     try {
@@ -33,8 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     atualizarLista();
-
-    // 🔎 BOTÃO PROCURAR
+    // BOTÃO PROCURAR
     if (btnEncontrar) {
         btnEncontrar.addEventListener("click", async () => {
             pokemonInfo.classList.add("hidden");
@@ -47,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const resposta = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
                 const dados = await resposta.json();
 
-                const nivel = Math.floor(Math.random() * 50) + 1;
+                const nivel = Math.floor(Math.random() * 100) + 1;
                 await new Promise(resolve => setTimeout(resolve, 800));
 
                 const imagemAnimada = dados.sprites?.versions?.["generation-v"]?.["black-white"]?.animated?.front_default;
@@ -94,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 🧬 TIPOS
+    // TIPOS
     function mostrarTipo(tiposArray) {
         pokemonTipo.innerHTML = "";
 
@@ -106,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 🎯 CAPTURAR
+    // CAPTURAR
     if (btnCapturar) {
         btnCapturar.addEventListener("click", async () => {
             if (!pokemonAtual) return;
@@ -139,7 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!pokemon || !pokemon.imagem || !pokemon.nome) return;
 
             const li = document.createElement("li");
-
+            li.dataset.nome = pokemon.nome;
             const img = document.createElement("img");
             img.src = pokemon.imagem;
             img.style.width = "75px";
@@ -150,6 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 pokemonImagem.classList.remove("hidden");
                 mostrarPokemon(pokemon);
             })
+                pokemonAtual = null;
 
             listaCapturados.appendChild(li);
         });
@@ -165,8 +170,10 @@ document.addEventListener("DOMContentLoaded", () => {
             btnsNavegacao.classList.remove("hidden");
         }
 
+        pokeonSelecionado = pokemon;
+        abrirPainel();
         pokemonNome.textContent = pokemon.nome.charAt(0).toUpperCase()+pokemon.nome.slice(1);
-        pokemonImagem.src = pokemon.imagem;
+        pokemonImagem.src = pokemon.imagemAnimada;
         pokemonLevel.textContent =  `Lv. ${pokemon.nivel || 1}`;
         
         const tipoDiv = document.getElementById("pokemon-tipo");
@@ -185,53 +192,40 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // BUSCAR POKEMON
-    input.addEventListener("input",  async() => {
-        // await fetch('http://localhost:3000/pokemon/54');
-        // await fetch(`http://localhost:3000/pokemon`, {method: 'PUT', headers: {'Content-Type': 'application/json'}})
+    input.addEventListener("input", async () => {
         const valor = input.value.toLowerCase();
 
-        const filtrados = capturados.filter(pokemon =>
-            pokemon.nome.toLowerCase().includes(valor)
-        );
+        // const filtrados = capturados.filter(pokemon =>
+        //     pokemon.nome.toLowerCase().includes(valor)
+        // );
 
-        mostrarLista(filtrados);
+        const response = await fetch('http://localhost:3000/pokemon');
+        const data = await response.json();
+        mostrarLista(data);
     });
 
     btnNome.addEventListener("click", async () => {
         const valor = input.value.toLowerCase();
     
-        const filtrados = capturados.filter(pokemon =>
-            pokemon.nome.toLowerCase().includes(valor)
-        );
+        // const filtrados = capturados.filter(pokemon =>
+        //     pokemon.nome.toLowerCase().includes(valor)
+        // );
 
-        mostrarLista(filtrados);
-        await fetch(`http://localhost:3000/pokemon/nome/${valor}`, {method: 'GET', headers: {'Content-Type': 'application/json'}})
+        const response = await fetch(`http://localhost:3000/pokemon/nome/${valor}`, {method: 'GET', headers: {'Content-Type': 'application/json'}});
+        const data = await response.json();
+        mostrarLista(data);
     });
 
     btnTipo.addEventListener("click", async () => {
         const valor = input.value.toLowerCase();
 
-        const filtrados = capturados.filter(pokemon =>
-            pokemon.tipos.some(tipo => tipo.toLowerCase().includes(valor))
-        );
+        // const filtrados = capturados.filter(pokemon =>
+        //     pokemon.tipos.some(tipo => tipo.toLowerCase().includes(valor))
+        // );
 
-        mostrarLista(filtrados);
-        await fetch(`http://localhost:3000/pokemon/tipo/${valor}`, {method: 'GET', headers: {'Content-Type': 'application/json'}})
-    });
-
-
-    btnLevel.addEventListener("click", async () => {
-        const valor = parseInt(input.value) || Infinity;
-        if (isNaN(valor)) {
-            alert("Digite um nómero válido");
-            return;
-        }
-        const filtrados = capturados.filter(pokemon =>
-            pokemon.nivel === valor
-        );
-        filtrados.sort((a, b) => a.nivel - b.nivel);
-        mostrarLista(filtrados);
-        await fetch(`http://localhost:3000/pokemon/nivel/${valor}`, {method: 'GET', headers: {'Content-Type': 'application/json'}});
+        const response = await fetch(`http://localhost:3000/pokemon/tipo/${valor}`, {method: 'GET', headers: {'Content-Type': 'application/json'}});
+        const data = await response.json();
+        mostrarLista(data);
     });
 
 
@@ -241,12 +235,29 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Digite um nómero válido");
             return;
         }
-        const filtrados = capturados.filter(pokemon =>
-            pokemon.id === valor
-        );
-        filtrados.sort((a, b) => a.nivel - b.nivel);
-        mostrarLista(filtrados);
-        await fetch(`http://localhost:3000/pokemon/id/${valor}`, {method: 'GET', headers: {'Content-Type': 'application/json'}});
+        // const filtrados = capturados.filter(pokemon =>
+        //     pokemon.id === valor
+        // );
+        // filtrados.sort((a, b) => a.nivel - b.nivel);
+        const response = await fetch(`http://localhost:3000/pokemon/id/${valor}`, {method: 'GET', headers: {'Content-Type': 'application/json'}});
+        const data = await response.json();
+        mostrarLista(data);
+    });
+
+
+    btnLevel.addEventListener("click", async () => {
+        const valor = parseInt(input.value) || Infinity;
+        if (isNaN(valor)) {
+            alert("Digite um nómero válido");
+            return;
+        }
+        // const filtrados = capturados.filter(pokemon =>
+        //     pokemon.nivel === valor
+        // );
+        // filtrados.sort((a, b) => a.nivel - b.nivel);
+        const response = await fetch(`http://localhost:3000/pokemon/nivel/${valor}`, {method: 'GET', headers: {'Content-Type': 'application/json'}});
+        const data = await response.json();
+        mostrarLista(data);
     });
 
     function mostrarLista(lista) {
@@ -272,32 +283,70 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 🧹 LIMPAR / POKEDEX
-    if (btnLimpar) {
-        btnLimpar.addEventListener("click", async () => {
-            const itensNaTela = Array.from(listaCapturados.children);
-
-            // nomes visíveis em minúsculo
-            const nomesVisiveis = itensNaTela.map(li => li.dataset.nome.toLowerCase());
-
-            // filtra capturados, removendo os que estão visíveis
-            capturados = capturados.filter(pokemon => 
-                !nomesVisiveis.includes(pokemon.nome.toLowerCase())
-            );
-
-            // salva no localStorage
-            localStorage.setItem("capturados", JSON.stringify(capturados));
-
-            // atualiza a lista
-            mostrarLista(capturados);
+    // LIMPAR / POKEDEX
+    if (btnApagarTudo) {
+        btnApagarTudo.addEventListener("click", async () => {
+            capturados = [];
+            localStorage.removeItem("capturados");
+            mostrarLista([]);
+            fecharPainel();
             await fetch('http://localhost:3000/pokemon', {method: 'DELETE', headers: {'Content-Type': 'application/json'}})
         });
     }
-    // 🧼 LIMPAR TELA
+
+    if (btnApagarFiltrados) {
+        btnApagarFiltrados.addEventListener("click", () => {
+            const itensNaTela = Array.from(listaCapturados.children);
+            const nomesVisiveis = itensNaTela.map(li =>
+                li.dataset.nome
+            );
+
+            capturados = capturados.filter(pokemon =>
+                !nomesVisiveis.includes(pokemon.nome)
+            );
+
+            localStorage.setItem("capturados", JSON.stringify(capturados));
+            mostrarLista(capturados);
+            fecharPainel();
+        });
+    }
+
+    if (btnApagarPokemon) {
+        btnApagarPokemon.addEventListener("click", async ()=>{
+            capturados = capturados.filter(p =>
+                p.nome !== pokeonSelecionado.nome
+            );
+
+            localStorage.setItem("capturados", JSON.stringify(capturados));
+            await fetch(`http://localhost:3000/pokemon/${pokeonSelecionado.id}`, {method: 'DELETE', headers: {'Content-Type': 'application/json'}})
+            fecharPainel();
+            const response = await fetch(`http://localhost:3000/pokemon`);
+            const data = await response.json();
+            mostrarLista(data);
+        });
+    }
+
+    // LIMPAR TELA
     function limparTela() {
         pokemonInfo.classList.add("hidden");
         btnsNavegacao.classList.add("hidden");
         pokemonAtual = null;
+    }
+
+    function abrirPainel() {
+        painelPokemon.classList.remove("hidden");
+        painelPokemon.classList.remove("animar-abrir");
+        void painelPokemon.offsetWidth;
+        painelPokemon.classList.add("animar-abrir");
+    }
+
+    function fecharPainel() {
+        painelPokemon.classList.remove("animar-abrir");
+        painelPokemon.classList.add("animar-fechar");
+        setTimeout(() => {
+            painelPokemon.classList.add("hidden");
+            painelPokemon.classList.remove("animar-fechar");
+        }, 300);
     }
 
     // BOTOES FILTRAR
@@ -307,6 +356,14 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             subBotoes.style.display = "none";
         }
+    });
+
+    btnUpparPokemon.addEventListener("click", async () => {
+        await fetch(`http://localhost:3000/pokemon/${pokeonSelecionado.id}/${pokeonSelecionado.nivel}`, {method: 'PUT', headers: {'Content-Type': 'application/json'}});
+        fecharPainel();
+        const response = await fetch(`http://localhost:3000/pokemon`);
+        const data = await response.json();
+        mostrarLista(data);
     });
 
 });

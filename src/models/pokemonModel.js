@@ -40,9 +40,10 @@ async function readPokemon(atributo, valor) {
         query = { tipos: { $in: [valor] } }
         break;
       default:
+        query = {}
         break;
     }
-    const pokemon = await pokemons.find(query).sort({tipo:1}).toArray();
+    return await pokemons.find(query).sort({id:1}).toArray();
     // const pokemon = await pokemons.find().toArray();
     // const pokemon = await pokemons.find({}, {name: true, _id: false}).toArray();
     // return await pokemons.find({}).sort({tipo:1}).toArray();
@@ -50,7 +51,7 @@ async function readPokemon(atributo, valor) {
     // const pokemon = await pokemons.find({ weight: { $lte: 25 } }).toArray();  // weight <= 25
     console.log(pokemon)
   } finally {
-    // await client.close();
+    await client.close();
   }
 }
 

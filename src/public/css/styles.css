@@ -1,0 +1,171 @@
+/* FONTES E FONT-FACE            */
+@font-face {
+    font-family: 'Pokemon';
+    src: url(/node_quickstart/src/fonts/Pokemon\ Solid.ttf);
+}
+
+body {
+    font-family: 'VT323', monospace;
+    margin: 0;
+    padding: 0;
+    background-image: url(/node_quickstart/src/imagens/Background.png);
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #333;
+}
+
+/* CONTAINERS PRINCIPAIS         */
+.container {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(5px);
+    padding: 50px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+/* OCULTAR ELEMENTOS             */
+.hidden {
+    display: none;
+}
+
+/* MENSAGENS INICIAIS            */
+.mensagem-inicial h1 {
+    font-family: "Pokemon", sans-serif;
+    font-size: 40px;
+    color: #e9ba00; 
+    text-shadow: 
+        2px 0 0 #2A75BB,
+       -2px 0 0 #2A75BB,
+        0 2px 0 #2A75BB,
+        0 -2px 0 #2A75BB,
+        2px 2px 0 #2A75BB,
+       -2px -2px 0 #2A75BB,
+        2px -2px 0 #2A75BB,
+       -2px 2px 0 #2A75BB;
+}
+
+.mensagem-inicial h2,
+.mensagem-inicial h3 {
+    color: #ffffff;
+    text-shadow: 
+        2px 0 0 #000000,
+       -2px 0 0 #000000,
+        0 2px 0 #000000,
+        0 -2px 0 #000000,
+        2px 2px 0 #000000,
+       -2px -2px 0 #000000,
+        2px -2px 0 #000000,
+       -2px 2px 0 #000000;
+}
+
+/* MENSAGEM DE LOADING           */
+#mensagem-loading img {
+    width: 120px;
+    margin: 20px 0px -20px 0px;
+}
+
+#mensagem-loading p {
+    font-size: 20px;
+    margin: 15px 0px 20px 10px;
+}
+
+/* IMAGENS DE POKÉMON            */
+#pokemon-info img {
+    width: 100px;
+    max-width: 101px;
+    margin: 20px 0px 0px 0px;
+}
+
+#pokemon-imagem {
+    animation: flutuar 2s infinite ease-in-out;
+}
+
+@keyframes flutuar {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+/* ANIMAÇÃO DE APARECIMENTO      */
+@keyframes aparecerPokemon {
+    0% { transform: scale(0.5); opacity: 0; }
+    60% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); }
+}
+
+.animar {
+    animation: aparecerPokemon 0.5s ease-out;
+}
+
+/* BOTÕES                         */
+button {
+    font-family: 'Pixelify Sans', sans-serif;
+    transition: 0.2s;
+    font-size: 20px;
+    color: #2A75BB;
+    padding: 10px;
+    border-radius: 15px;
+    border: 3px solid #2A75BB;
+    margin: 15px 0 0 0;
+    background-color: white;
+}
+
+button:hover {
+    transform: scale(1.1);
+    background-color: #2A75BB;
+    color: white;
+}
+
+/* LISTAS E TEXTOS               */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+#pokemon-nome {
+    margin: -5px 0 -5px 0;
+}
+
+#pokemon-descricao {
+    margin: -5px 0 20px 0;
+}
+
+/* TIPOS DE POKÉMON              */
+#pokemon-tipo {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 2px 0 8px 0;
+}
+
+.tipo {
+    display: inline-block;
+    font-size: 25px;
+    padding: 1px 5px;
+    border-radius: 4px;
+    color: white;
+    margin-top: 5px;
+}
+
+/* Tipos de Pokémon */
+.poison {background-color: #A040A0;}
+.fire {background-color: #F08030;}
+.water {background-color: #517ee7;}
+.grass {background-color: #69c73a;}
+.electric {background-color: #F8D030; color: black;}
+.ice {background-color: #98D8D8; color: black;}
+.fighting {background-color: #C03028;}
+.psychic {background-color: #F85888;}
+.ground {background-color: #E0C068; color: black;}
+.rock {background-color: #B8A038;}
+.flying {background-color: #A890F0;}
+.bug {background-color: #a2b120;}
+.normal {background-color: #A8A878;}
+.dark {background-color: #111111;}
+.ghost {background-color: #56009c;}
+.steel {background-color: #686868;}
+.fairy {background-color: #ff9af1;}
+.dragon {background-color: #0059ff;}

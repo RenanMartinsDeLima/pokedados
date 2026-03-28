@@ -14,6 +14,8 @@ router.get('/nome/:valor', controller.getBy);
 
 router.get('/tipo/:valor', controller.getBy);
 
+router.get('/', controller.get)
+
 router.put('/:id/:nivel', controller.update);
 
 router.delete('/:id', controller.remove);

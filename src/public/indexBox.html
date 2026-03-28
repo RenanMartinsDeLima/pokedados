@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha PokéDex</title>
+
+    <link rel="stylesheet" href="css/stylesBox.css">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" type="image/png" sizes="96x96" href="imagens/pokemon-icon.png">
+</head>
+<body>
+    <div class="pc-container">
+
+        <!-- ESQUERDA -->
+        <div class="lado-esquerdo hidden">
+            <button id="uppar-pokemon">⬆️LEVEL UP⬆️</button>
+            <h3 id="pokemon-nome"></h3>
+            <div class="pokemon-view">
+                <img id="pokemon-imagem" src="" class="hidden">
+            </div>
+
+            <p class="level" id="pokemon-level"></p>
+
+            <div class="tipo" id="pokemon-tipo"></div>
+
+            <p id="pokemon-peso"></p>
+            <p id="pokemon-altura"></p>
+            <button id="apagar-pokemon">🗑️</button>
+            
+        </div>
+
+        <!-- DIREITA -->
+        <div class="lado-direito">
+            <div class="topo">
+                <input id="input-busca" placeholder="Buscar..."></input>
+                <div class="menu">
+                    <button id="btn-toggle">☰</button>
+
+                    <div class="sub-botoes" id="sub-botoes">
+                        <button id="btn-nome">NOME</button>
+                        <button id="btn-tipo">TIPO</button>
+                        <button id="btn-level">LEVEL</button>
+                        <button id="btn-id">ID</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid" id="grid-pokemon">
+                <ul id="lista-capturados"></ul>
+            </div>
+                
+            <div class="botoes">
+                <button id="btn-limpar-tudo" type="button">APAGAGAR TUDO</button>
+                <!-- <button id="btn-limpar-filtrados" type="button">APAGAGAR FILTRADOS</button> -->
+                <a href="index.html">
+                    <button>VOLTAR</button>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="scripts.js" defer></script>
+</body>
+</html>

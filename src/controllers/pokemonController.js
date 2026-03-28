@@ -15,7 +15,7 @@ const create = async (req, res) => {
 // GET 
 const get = async (req, res) => {
   try {
-    const list = await readPokemon();
+    const list = await readPokemon(null, null);
     res.json(list);
   } catch (err) {
     res.status(500).json({ error: 'Erro ao buscar pokémons\n' + err.message });
